@@ -1,0 +1,8 @@
+# Bibliotecas usadas pelos notebooks e scripts do projeto
+pandas==3.1.0
+numpy==2.5.4
+requests==2.34.2
+beautifulsoup4==4.15.0
+lxml==6.1.3
+python-dotenv==1.2.4
+jupyter==1.1.1
