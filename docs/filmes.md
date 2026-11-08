@@ -1,5 +1,7 @@
 # DC x Marvel: bilheteria nos cinemas
 
+> Autora: **Sofia Lima** · [← voltar ao README principal](../README.md)
+
 Esta é a parte de **bilheteria** do projeto em grupo *Popularidade DC x Marvel: HQs, jogos e bilheteria*, feito para a disciplina de Introdução à Ciência de Dados. A entrega final é uma Análise Exploratória de Dados (EDA). Este README cobre a primeira etapa: a coleta e a preparação dos dados.
 
 ---
@@ -16,9 +18,9 @@ A ideia é comparar a popularidade das duas editoras no cinema por dois lados: *
 
 **Datas da coleta:** tabelas da Wikipedia em 02/11/2026; OMDb em 25/10/2026.
 
-A lista de filmes, a bilheteria, o orçamento e as notas da crítica vêm das páginas da Wikipedia em inglês [List of films based on Marvel Comics publications](https://en.wikipedia.org/wiki/List_of_films_based_on_Marvel_Comics_publications) e [List of films based on DC Comics publications](https://en.wikipedia.org/wiki/List_of_films_based_on_DC_Comics_publications). Usei uma fonte única para não ter filmes repetidos ou com títulos escritos de jeitos diferentes, e porque cada página já traz uma tabela de bilheteria, que cita o Box Office Mojo como fonte, e uma de crítica (Rotten Tomatoes e Metacritic). Fiz web scraping com `requests` e `pandas.read_html` no notebook `01_coleta.ipynb`. Não fiz scraping do Box Office Mojo, do Rotten Tomatoes nem do Metacritic diretamente, porque os termos de uso desses sites restringem a coleta automatizada.
+A lista de filmes, a bilheteria, o orçamento e as notas da crítica vêm das páginas da Wikipedia em inglês [List of films based on Marvel Comics publications](https://en.wikipedia.org/wiki/List_of_films_based_on_Marvel_Comics_publications) e [List of films based on DC Comics publications](https://en.wikipedia.org/wiki/List_of_films_based_on_DC_Comics_publications). Usei uma fonte única para não ter filmes repetidos ou com títulos escritos de jeitos diferentes, e porque cada página já traz uma tabela de bilheteria, que cita o Box Office Mojo como fonte, e uma de crítica (Rotten Tomatoes e Metacritic). Fiz web scraping com `requests` e `pandas.read_html` no notebook `01_coleta_filmes.ipynb`. Não fiz scraping do Box Office Mojo, do Rotten Tomatoes nem do Metacritic diretamente, porque os termos de uso desses sites restringem a coleta automatizada.
 
-A nota e o número de votos do público vêm do IMDb, pela [OMDb API](https://www.omdbapi.com/), consultada filme a filme pelo título e ano no `02_limpeza.ipynb`. A chave da API fica no arquivo `.env`, que não vai para o repositório. Os dados brutos das duas fontes ficam em `data/raw/`, sem limpeza, e a base final em `data/processed/` (ver seção 8).
+A nota e o número de votos do público vêm do IMDb, pela [OMDb API](https://www.omdbapi.com/), consultada filme a filme pelo título e ano no `02_limpeza_filmes.ipynb`. A chave da API fica no arquivo `.env`, que não vai para o repositório. Os dados brutos das duas fontes ficam em `data/raw/`, sem limpeza, e a base final em `data/processed/` (ver seção 8).
 
 ## 3. Dicionário de dados
 
@@ -47,7 +49,7 @@ O exemplo usado em todas as linhas é o filme *Black Panther* (2018). Os valores
 
 ## 4. Google Drive da turma
 
-Os arquivos desta etapa estão no Drive da turma: **[inserir link aqui]**
+Os arquivos desta etapa estão no Drive da turma: **[Google Drive](https://drive.google.com/drive/folders/1uBvs5oCj5a46YaxwvjYN_9kjNVaAx8Li)**
 
 ## 5. Critérios de inclusão e exclusão
 
@@ -84,7 +86,7 @@ Só **filmes lançados nos cinemas**, live-action ou animação, de qualquer ano
 
 Só entram filmes que **já saíram do cinema**, ou seja, com bilheteria completa. Um filme ainda em cartaz tem a bilheteria subestimada, e o lucro e o ROI ficariam errados.
 
-Nenhuma das fontes informa quando um filme saiu de cartaz, então usei uma regra objetiva: o filme precisa ter estreado **pelo menos 120 dias (cerca de 4 meses) antes de 02/11/2026**, a data em que as tabelas da Wikipedia usadas foram baixadas. O prazo de 120 dias (cerca de 4 meses) é uma escolha deste projeto, e não um dado das fontes (ver limitações). Os valores ficam nas variáveis `DIAS_EM_CARTAZ` e `DATA_COLETA` da célula 3 do `02_limpeza.ipynb` e podem ser ajustados.
+Nenhuma das fontes informa quando um filme saiu de cartaz, então usei uma regra objetiva: o filme precisa ter estreado **pelo menos 120 dias (cerca de 4 meses) antes de 02/11/2026**, a data em que as tabelas da Wikipedia usadas foram baixadas. O prazo de 120 dias (cerca de 4 meses) é uma escolha deste projeto, e não um dado das fontes (ver limitações). Os valores ficam nas variáveis `DIAS_EM_CARTAZ` e `DATA_COLETA` da célula 3 do `02_limpeza_filmes.ipynb` e podem ser ajustados.
 
 | Filme | Dias desde a estreia |
 |---|---|
@@ -137,31 +139,33 @@ A Wikipedia informa o orçamento de alguns filmes como uma faixa (ex: "$75–83"
 7. **Orçamentos em faixa:** usei a média das pontas em 2 filmes (ver seção 5.5).
 8. **Os dados mudam com o tempo:** notas e votos do IMDb e valores da Wikipedia mudam. Os números valem para a data da coleta.
 
-## 8. Estrutura das pastas
+## 8. Arquivos desta parte
+
+Só os arquivos de filmes. A estrutura completa do repositório está no [README principal](../README.md#estrutura-de-pastas).
 
 ```
 ├── data/
-│   ├── raw/                     # dados brutos, sem alteração
+│   ├── raw/                            # dados brutos, sem alteração
 │   │   ├── marvel_bilheteria_wiki.csv
 │   │   ├── marvel_criticas_wiki.csv
 │   │   ├── dc_bilheteria_wiki.csv
 │   │   ├── dc_criticas_wiki.csv
 │   │   └── omdb.csv
 │   └── processed/
-│       └── filmes_dc_marvel.csv # base final (120 filmes, 18 colunas)
+│       └── filmes_dc_marvel.csv        # base final (120 filmes, 18 colunas)
 ├── notebooks/
-│   ├── 01_coleta.ipynb          # scraping da Wikipedia
-│   └── 02_limpeza.ipynb         # limpeza, consulta à OMDb, junção e CSV final
-├── requirements.txt
-└── README.md
+│   ├── 01_coleta_filmes.ipynb          # scraping da Wikipedia
+│   └── 02_limpeza_filmes.ipynb         # limpeza, consulta à OMDb, junção e CSV final
+└── docs/
+    └── filmes.md                       # este arquivo
 ```
 
-**Dados brutos x dados limpos.** `data/raw/` guarda os dados como vieram das fontes, sem limpeza: as tabelas da Wikipedia como o pandas as extraiu (a única mudança é que os cabeçalhos de duas linhas viraram uma) e as respostas da OMDb como a API devolveu. Os valores continuam com notas de rodapé, `$` e textos como "—N/a". `data/processed/` guarda só a versão limpa e final. O `02_limpeza.ipynb` só escreve em `data/raw/` para salvar o `omdb.csv`, que é o bruto da API, e só consulta a OMDb se esse arquivo ainda não existir (o limite da chave é de 1.000 consultas por dia). A limpeza em si nunca altera os arquivos brutos, então qualquer pessoa pode refazer todo o processo a partir deles (ver seção 9).
+**Dados brutos x dados limpos.** `data/raw/` guarda os dados como vieram das fontes, sem limpeza: as tabelas da Wikipedia como o pandas as extraiu (a única mudança é que os cabeçalhos de duas linhas viraram uma) e as respostas da OMDb como a API devolveu. Os valores continuam com notas de rodapé, `$` e textos como "—N/a". `data/processed/` guarda só a versão limpa e final. O `02_limpeza_filmes.ipynb` só escreve em `data/raw/` para salvar o `omdb.csv`, que é o bruto da API, e só consulta a OMDb se esse arquivo ainda não existir (o limite da chave é de 1.000 consultas por dia). A limpeza em si nunca altera os arquivos brutos, então qualquer pessoa pode refazer todo o processo a partir deles (ver seção 9).
 
 ## 9. Como reproduzir
 
-1. Instale as dependências: `pip install -r requirements.txt`
+1. Na raiz do repositório, instale as dependências: `pip install -r requirements.txt`
 2. Crie um arquivo `.env` na raiz com a sua chave da OMDb: `OMDB_KEY=sua_chave` (é gratuita em [omdbapi.com](https://www.omdbapi.com/apikey.aspx)).
-3. Rode os notebooks de dentro da pasta `notebooks/`, em ordem: `01_coleta.ipynb` e depois `02_limpeza.ipynb`.
+3. Rode os notebooks de dentro da pasta `notebooks/`, em ordem: `01_coleta_filmes.ipynb` e depois `02_limpeza_filmes.ipynb`.
 
-> Rodar o `01_coleta.ipynb` de novo baixa a versão **atual** da Wikipedia e sobrescreve os dados brutos. Para reproduzir exatamente esta base, rode só o `02_limpeza.ipynb`, que usa os arquivos de `data/raw/`.
+> Rodar o `01_coleta_filmes.ipynb` de novo baixa a versão **atual** da Wikipedia e sobrescreve os dados brutos. Para reproduzir exatamente esta base, rode só o `02_limpeza_filmes.ipynb`, que usa os arquivos de `data/raw/`.
