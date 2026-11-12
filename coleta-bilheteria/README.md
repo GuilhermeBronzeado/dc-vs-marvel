@@ -47,7 +47,7 @@ O exemplo usado em todas as linhas é o filme *Black Panther* (2018). Os valores
 
 ## 4. Google Drive da turma
 
-Os arquivos desta etapa estão no Drive da turma: **[inserir link aqui]**
+Os arquivos desta etapa estão no Drive da turma: **https://drive.google.com/drive/folders/1uBvs5oCj5a46YaxwvjYN_9kjNVaAx8Li**
 
 ## 5. Critérios de inclusão e exclusão
 
@@ -61,7 +61,7 @@ Só **filmes lançados nos cinemas**, live-action ou animação, de qualquer ano
 
 ### 5.2 Exclusões de escopo
 
-| Filme / grupo | Universo | Motivo |
+| Filme / grupo | Universo | Motivo | 
 |---|---|---|
 | Selos **Vertigo, WildStorm, Paradox Press e Mad** | DC | Selos secundários (ver abaixo) |
 | Constantine (2005) | DC | Selo Vertigo |
