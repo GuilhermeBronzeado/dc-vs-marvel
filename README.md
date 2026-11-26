@@ -1,44 +1,111 @@
-# dc-vs-marvel
-Projeto da matéria Introdução da ciência de Dados da UFPB, turma 2026.2
+# DC vs Marvel: quem vende mais?
 
-COMICS
+Projeto da disciplina **Introdução à Ciência de Dados**, UFPB, turma 2026.2.
 
-Explicação do conjunto de dados:
-Os dados das comics cobrem o ranking mensal de vendas entre janeiro de 1997 e dezembro de 2019, ou seja, 23 anos, 276 meses, 90.833 registros no total. Cada linha representa um título que apareceu no ranking de mais vendidos daquele mês, com posição, título, edição, preço de capa e editora. A fonte é o site ComicChron (https://www.comichron.com/monthlycomicssales/), que publica rankings mensais baseados em dados do mercado direto de comic shops. A base original cobre todas as editoras do ranking, não só Marvel e DC. O período foi recortado em 1997–2019 porque antes de 1997 o formato das tabelas do site muda várias vezes, quebrando o parser, e a partir de 2020 o site passa a publicar um formato completamente diferente.
+## Objetivo
 
-Como os dados foram coletados:
-A coleta foi realizado scraping, feita com um script Python em notebook, usando requests para baixar as páginas HTML de cada mês, BeautifulSoup para extrair as tabelas e pandas para consolidar tudo num CSV único. O script percorre os 276 meses de janeiro de 1997 a dezembro de 2019, um request por mês, com time.sleep(1) entre eles para não sobrecarregar o servidor. Cada página tem uma tabela HTML com o ranking daquele mês; o parser lê o cabeçalho da tabela dinamicamente (procurando as colunas por nome, não por posição) porque a ordem e a presença de colunas mudam ao longo do período, e descarta tabelas que não têm coluna Issue, o que exclui tabelas não relacionadas presentes nas páginas. O Rank é gerado pela posição da linha na tabela, já que o HTML não expõe uma coluna de rank explícita em todas as épocas.
+> **Qual editora, Marvel ou DC, vende mais e é mais popular em cada mídia: HQs, jogos e cinema?**
 
-Dicionário de dados
-Ano: Numero inteiro de 1997 a 2029;
-Mês: Numero inteiro de 1 a 12;
-Rank inteiro: Numero inteiro que representa a posição do título no ranking mensal, entre todas as editoras, de 1 a 300 na média;
-Titulo: texto que contem o nome da HQ, ex: death in family;
-Edicao: texto que contem o numero da edição, ex: 35;
-Preço: numero decimal que representa o preço de capa em dólares (pode ser vazio em edições antigas), ex: 7.85;
-Editora: texto que contem a editora que publicou o título, ex: DC.
+Para responder, o grupo coletou e preparou três bases de dados, uma para cada mídia. A entrega final é uma Análise Exploratória de Dados (EDA), apresentada em sala. Este repositório documenta o **processo**: de onde vieram os dados, como foram coletados e limpos, e como reproduzir tudo.
 
-COMICS
+## Integrantes
 
-JOGOS
+| Nome | Responsável por |
+|---|---|
+| Gabriely Medeiros Amorim | HQs |
+| Guilherme de Andrade Bronzeado | Jogos |
+| Sofia Lima | Filmes |
+| Claudio Junior | README e organização do repositório |
 
-Explicação do conjunto de dados atual:
-O conjunto de dados cobre apenas os principais títulos da Marvel e DC coletados das fontes: https://pt.wikipedia.org/wiki/Marvel_Games, e https://en.wikipedia.org/wiki/List_of_video_games_based_on_DC_Comics. A base atual tem o objetivo de apenas servir como referência para realizar a extração das informações de outras fontes (principais: IGBD, VGchartz, rawg.io), uma vez que esses bancos de dados não possuem ferramentas de pesquisas que permitem filtrar apenas as informações relevantes para o projeto. Os arquivos possuem informações sobre: nome, publicadora, desenvolvedora, universo pertencente, data de lançamento e outras informações relacionadas à extração. 
- Limitações: As páginas da wikipedia foram as únicas fontes disponíveis com os jogos separados por marca (Marvel e DC), e o critério de seleção delas diverge, causando a listagem de alguns poucos jogos que se diferenciam da classificação de personagens do universo Marvel (Exemplo: O jogo Man In Black é propriedade da Marvel, e está presente nos dados). Os arquivos não possuem todos os jogos existentes relacionados as marcas, eles cobrem apenas os títulos mais relevantes de acordo com a sua época, deixando de fora jogos de menor escopo. Alguns jogos possuem o mesmo nome, porém com anos de lançamento, publicadora, desenvolvadora, e plataformas diferentes (Ex: Existem 7 jogos com o mesmo título "Batman" e anos de lançamentos próximos, porém classificam-se como jogos diferentes)
+## Bases de dados
 
- Como os dados foram coletados: 
- A coleta foi feita com scrapping, através de um script Python em notebook, usando requests para poder baixar as páaginas da wikipedia, BeautifulSoup foi utilizado para extrair o htlm e filtrar as tabelas, pandas foi essencial para ler o html das tabelas e montar o dataframe, e posteriormente formata-lo em csv. O script percorre todas as 5 tabelas de cada site (cada uma representando uma década), determina as colunas e armazenas as linhas, formando dois csv's distintos para cada site (Um da Marvel e outro da DC). Após isso um script, também em um notebook python, de tratamento foi realizado com o intúito de juntar os csv's em um só, primeiro padronizando o nome das colunas e selecionando apenas as relevantes e presentes em ambos os arquivos e criando colunas de classificação, como "universo", depois carregamento das linhas dos dois arquivos, isso transformando-os em data frame e por fim formatando o arquivo final em csv. (Os arquivos csv brutos foram mantidos pois possuem informações individuais que podem ser úteis na análise dos dados, Ex: coluna Propriedades).
+| Base | Arquivo final | Linhas | Período | Fonte | Documentação |
+|---|---|---|---|---|---|
+| HQs | `data/processed/marvel_dc_1997_2019.csv` | 45.841 | 1997–2019 | [ComicChron](https://www.comichron.com/monthlycomicssales/) | [docs/hqs.md](docs/hqs.md) |
+| Jogos | `data/processed/jogos_dc_marvel.csv` | 292 | 1979–2027 | Wikipedia | [docs/jogos.md](docs/jogos.md) |
+| Filmes | `data/processed/filmes_dc_marvel.csv` | 120 | 1978–2026 | Wikipedia + OMDb (IMDb) | [docs/filmes.md](docs/filmes.md) |
 
- Dicionário de dados:
- 
-titulo: String (Nome do jogo)
-ano: String (Anos de publicação de um jogo Ex: 2011, 2013 no caso do mesmo jogo ter publicações diferentes)
-plataformas: String (Plataformas em que o jogo foi lançado originalmente Ex: PS5, PS4)
-publicadora(s): String (Ex: Sony Interactive Entertainment)
-universo: srt (Diferencia-los em Marvel e DC)
-secao_wikipedia: str (De qual tabela foram retirados os dado)
-url_fonte: str (Página da wikipedia a qual os dados pertencem)
-data_coleta: str (Ex: 2026-11-03)
-ano_lancamento: Int64 (Ex: 2011) (Ano do primeiro lançamento daquela versão do jogo)
+### HQs
+Ranking mensal dos quadrinhos mais vendidos nas lojas especializadas dos EUA, filtrado para Marvel (22.443 linhas) e DC (23.398 linhas). Cada linha é um título que entrou no ranking de um mês, com posição, edição, preço e editora. → [documentação completa](docs/hqs.md)
 
-JOGOS
+### Jogos
+Lista de jogos baseados nas duas editoras: 175 da Marvel e 117 da DC. Por enquanto a base tem título, ano, plataformas e publicadora. Ela serve de referência para buscar vendas e notas em outras fontes (IGDB, VGChartz, rawg.io). → [documentação completa](docs/jogos.md)
+
+### Filmes
+Filmes de cinema baseados nas duas editoras: 78 da Marvel e 42 da DC. Para cada filme, a base traz bilheteria, orçamento, lucro, ROI, notas da crítica (Rotten Tomatoes e Metacritic) e do público (IMDb). → [documentação completa](docs/filmes.md)
+
+### Padrão das colunas
+Em todas as bases, os nomes das colunas estão **em minúsculas, sem acento e com `_`** (ex.: `ano`, `editora`, `bilheteria_mundial`). A editora aparece como `Marvel` ou `DC`, na coluna `editora` (HQs) ou `universo` (jogos e filmes).
+
+## Estrutura de pastas
+
+```
+dc-vs-marvel/
+├── data/
+│   ├── raw/                            # dados brutos, como vieram das fontes (nunca editar à mão)
+│   │   ├── total_comics_1997_2019.csv      # HQs
+│   │   ├── wikipedia_jogos_dc.csv          # jogos
+│   │   ├── wikipedia_jogos_marvel.csv      # jogos
+│   │   ├── dc_bilheteria_wiki.csv          # filmes
+│   │   ├── dc_criticas_wiki.csv            # filmes
+│   │   ├── marvel_bilheteria_wiki.csv      # filmes
+│   │   ├── marvel_criticas_wiki.csv        # filmes
+│   │   └── omdb.csv                        # filmes (respostas da API OMDb)
+│   └── processed/                      # bases finais, limpas, usadas na análise
+│       ├── marvel_dc_1997_2019.csv
+│       ├── jogos_dc_marvel.csv
+│       └── filmes_dc_marvel.csv
+├── notebooks/                          # 01_ = coleta, 02_ = limpeza
+│   ├── 01_coleta_hqs.ipynb
+│   ├── 02_limpeza_hqs.ipynb
+│   ├── 01_coleta_jogos.ipynb
+│   ├── 02_limpeza_jogos.ipynb
+│   ├── 01_coleta_filmes.ipynb
+│   └── 02_limpeza_filmes.ipynb
+├── src/
+│   └── coletaComics.py                 # funções auxiliares da coleta de HQs
+├── docs/                               # documentação detalhada de cada base
+│   ├── hqs.md
+│   ├── jogos.md
+│   └── filmes.md
+├── requirements.txt
+└── README.md
+```
+
+**Dados brutos x dados limpos.** `data/raw/` guarda os dados exatamente como vieram das fontes. Os notebooks de limpeza leem o bruto e gravam o resultado em `data/processed/`, sem alterar o bruto. Assim, qualquer pessoa pode refazer a limpeza do zero.
+
+## Como reproduzir
+
+1. Clone o repositório e instale as dependências (Python 3.11 ou mais novo):
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Só para filmes:** crie um arquivo `.env` na raiz do repositório com a sua chave da OMDb: `OMDB_KEY=sua_chave` (é gratuita em [omdbapi.com](https://www.omdbapi.com/apikey.aspx)). O `.env` não vai para o GitHub.
+3. Abra o Jupyter e rode os notebooks **de dentro da pasta `notebooks/`**. Todos os caminhos são relativos a ela (`../data/...`).
+4. Para cada base, rode primeiro o `01_coleta_*` e depois o `02_limpeza_*`.
+
+> ⚠️ **Os notebooks `01_coleta_*` baixam os dados de novo da internet e sobrescrevem `data/raw/`.** Como os sites mudam, os números podem sair diferentes dos deste repositório. Para reproduzir exatamente as bases daqui, rode **só os notebooks `02_limpeza_*`**.
+
+## Links
+
+- 📁 [Google Drive da turma](https://drive.google.com/drive/folders/1uBvs5oCj5a46YaxwvjYN_9kjNVaAx8Li)
+- Fontes: [ComicChron](https://www.comichron.com/monthlycomicssales/) · [Marvel Games (Wikipedia)](https://pt.wikipedia.org/wiki/Marvel_Games) · [Video games based on DC Comics (Wikipedia)](https://en.wikipedia.org/wiki/List_of_video_games_based_on_DC_Comics) · [Films based on Marvel Comics (Wikipedia)](https://en.wikipedia.org/wiki/List_of_films_based_on_Marvel_Comics_publications) · [Films based on DC Comics (Wikipedia)](https://en.wikipedia.org/wiki/List_of_films_based_on_DC_Comics_publications) · [OMDb API](https://www.omdbapi.com/)
+
+## Como o grupo trabalha no Git
+
+Para ninguém sobrescrever o trabalho de outra pessoa:
+
+1. **Nunca trabalhe direto na `main`.** Crie uma branch para a sua tarefa:
+   ```bash
+   git checkout main
+   git pull
+   git checkout -b nome-da-tarefa      # ex.: vendas-jogos
+   ```
+2. Faça as alterações e salve no Git:
+   ```bash
+   git add arquivo1 arquivo2
+   git commit -m "Descreve o que mudou"
+   git push -u origin nome-da-tarefa
+   ```
+3. No GitHub, abra um **Pull Request** da sua branch para a `main`. Alguém do grupo revisa e faz o merge.
+4. **Cada um mexe nos seus arquivos.** O README principal é mantido por Claudio. Se quiser mudar algo nele, avise ou abra um Pull Request.
